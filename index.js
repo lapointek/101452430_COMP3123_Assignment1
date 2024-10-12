@@ -80,8 +80,8 @@ app.get("/api/v1/emp/employees", async (req, res) => {
 
 // Fetch employee by id
 app.get("/api/v1/emp/employees/:id", async (req, res) => {
-    const { _id } = req.params;
     try {
+        const { _id } = req.params;
         const fetchEmployee = await Employee.findById(_id);
         if (fetchEmployee) {
             res.status(200).json(fetchEmployee);
@@ -94,9 +94,37 @@ app.get("/api/v1/emp/employees/:id", async (req, res) => {
     }
 });
 
-// TODO: update employee information
+// Update Employee
+app.get("/api/v1/emp/employees/:id", async (req, res) => {
+    try {
+        const { _id } = req.params;
+        const employee = await Employee.findByIdAndUpdate(_id);
+        if (employee) {
+            res.status(200).json(employee);
+        } else {
+            res.status(404).json({ message: "Employee not found" });
+        }
+    } catch (err) {
+        console.error("Error", err);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
 
 // TODO: delete employee
+app.get("/api/v1/emp/employees/:id", async (req, res) => {
+    try {
+        const { _id } = req.params;
+        const employee = await Employee.findByIdAndDelete(_id);
+        if (employee) {
+            res.status(200).json(employee);
+        } else {
+            res.status(404).json({ message: "Employee not found" });
+        }
+    } catch (err) {
+        console.error("Error", err);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
 
 // Connect to database and run server
 mongoose
