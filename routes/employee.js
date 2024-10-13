@@ -98,9 +98,9 @@ router.delete("/emp/employees/:id", async (req, res) => {
         // find employee by id and delete
         const employee = await Employee.findByIdAndDelete(id);
         if (employee) {
-            // if successful return status 204 (no content) fulfilled request
-            res.status(204).json({ message: "Employee deleted successfully." });
-            console.log(`Deleted employee: ${id}`);
+            // if successful return status 204 (No Content) fulfilled request
+            res.sendStatus(204);
+            console.log(`Deleted employee successfully. Employee id: ${id}`);
         } else {
             res.status(404).json({ message: "Employee cannot be deleted" });
         }
