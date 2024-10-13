@@ -43,10 +43,10 @@ router.post("/user/login", async (req, res) => {
         // assign true to visited property. track user has visited
         req.session.visited = true;
         // return status code 200 OK
-        return res.sendStatus(200);
+        res.sendStatus(200);
     } else {
         console.log("Failed Authentication!");
-        return res.sendStatus(401);
+        res.sendStatus(401);
     }
 });
 

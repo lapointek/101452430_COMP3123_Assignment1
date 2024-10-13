@@ -26,7 +26,7 @@ router.post("/emp/employees", async (req, res) => {
     // if the user session doesnt exist
     if (!req.session.username) {
         // return status 401 unauthorized error occured
-        return res.sendStatus(401);
+        res.sendStatus(401);
     } else {
         // otherwise create employee with requested body
         const employee = await Employee.create(data);
@@ -42,8 +42,8 @@ router.get("/emp/employees", async (req, res) => {
         // without any parameters it returns all employees.
         const fetchEmployees = await Employee.find();
         console.log("Successfully fetched employees");
-        // return status 201 request fulfilled
-        res.status(201).json(fetchEmployees);
+        // return status 200 OK
+        res.status(200).json(fetchEmployees);
     } catch (err) {
         console.error("Error fetching employee data:", err);
         res.status(500).json({ message: "Internal Server Error" });
@@ -59,7 +59,7 @@ router.get("/emp/employees/:id", async (req, res) => {
         const fetchEmployee = await Employee.findById(id);
         if (fetchEmployee) {
             // if employee by id exist return employee in json format
-            res.json(fetchEmployee);
+            res.status(200).json(fetchEmployee);
         } else {
             // return status 404 Not Found
             res.status(404).json({ message: "Employee id not found" });
@@ -102,8 +102,8 @@ router.delete("/emp/employees/:id", async (req, res) => {
         // find employee by id and delete
         const employee = await Employee.findByIdAndDelete(id);
         if (employee) {
-            // if successful return status 200 OK
-            res.status(200).json(employee);
+            // if successful return status 204 (no content) fulfilled request
+            res.status(204).json(employee);
             console.log(`Deleted employee: ${id}`);
         } else {
             res.status(404).json({ message: "Employee cannot be deleted" });
