@@ -16,5 +16,4 @@ function comparePassword(raw, hash) {
     return bcrypt.compareSync(raw, hash);
 }
 
-exports.comparePassword = comparePassword;
-exports.hashPassword = hashPassword;
+module.exports = { hashPassword, comparePassword };
