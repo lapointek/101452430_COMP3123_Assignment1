@@ -1,23 +1,15 @@
 const express = require("express");
-const router = express.Router();
+const sessionRouter = require("../utils/session");
 const Employee = require("../models/employee.model");
-const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const app = express();
 
 app.use(cookieParser());
-app.use(router);
+app.use(express.json());
 
-app.use(
-    session({
-        secret: "pass123",
-        saveUninitialized: false,
-        resave: false,
-        cookie: {
-            maxAge: 60000 * 60,
-        },
-    })
-);
+app.use(sessionRouter);
+const router = express.Router();
+app.use(router);
 
 // Create Employee
 router.post("/emp/employees", async (req, res) => {
@@ -26,12 +18,14 @@ router.post("/emp/employees", async (req, res) => {
     // if the user session doesnt exist
     if (!req.session.username) {
         // return status 401 unauthorized error occured
-        res.sendStatus(401);
+        res.sendStatus(401).json({ message: "Failed to create employee." });
     } else {
         // otherwise create employee with requested body
         const employee = await Employee.create(data);
         // return status 201 request fulfilled
-        res.status(201).json(employee);
+        res.status(201).json({
+            message: `Employee Created Successfully. employee_id: ${employee.id}`,
+        });
     }
 });
 
@@ -83,8 +77,10 @@ router.put("/emp/employees/:id", async (req, res) => {
         // if successful in updating
         if (employee) {
             // return status 200 OK
-            res.status(200).json(employee);
-            console.log(`Updated employee: ${id}`);
+            res.status(200).json({
+                message: `Employee details updated successfully.`,
+            });
+            console.log(`Updated employee`);
         } else {
             res.status(404).json({ message: "Employee cannot be updated" });
         }
@@ -103,7 +99,7 @@ router.delete("/emp/employees/:id", async (req, res) => {
         const employee = await Employee.findByIdAndDelete(id);
         if (employee) {
             // if successful return status 204 (no content) fulfilled request
-            res.status(204).json(employee);
+            res.status(204).json({ message: "Employee deleted successfully." });
             console.log(`Deleted employee: ${id}`);
         } else {
             res.status(404).json({ message: "Employee cannot be deleted" });

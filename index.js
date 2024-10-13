@@ -1,10 +1,24 @@
 const express = require("express");
+const sessionRouter = require("./utils/session");
+// const session = require("express-session");
 const mongoose = require("mongoose");
 const userRouter = require("./routes/user");
 const employeeRouter = require("./routes/employee");
 const app = express();
 
 app.use(express.json());
+// app.use(
+//     session({
+//         secret: "pass123",
+//         saveUninitialized: false,
+//         resave: false,
+//         cookie: {
+//             maxAge: 60000 * 60,
+//         },
+//     })
+// );
+
+app.use(sessionRouter);
 app.use("/api/v1", userRouter);
 app.use("/api/v1", employeeRouter);
 
